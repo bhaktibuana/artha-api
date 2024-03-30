@@ -1,6 +1,8 @@
 package app
 
 import (
+	"artha-api/src/routers"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -32,6 +34,7 @@ func Middlewares(app *gin.Engine) {
 }
 
 func Routes(app *gin.Engine) {
+	routers.Index(app)
 }
 
 func Serve(app *gin.Engine, port string) {
