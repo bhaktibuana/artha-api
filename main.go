@@ -24,7 +24,7 @@ func main() {
 	gin.SetMode(configs.AppConfig().GIN_MODE)
 	server := gin.Default()
 
-	app.DBConnection()
+	app.DBConnection(configs.DBConfig().DB_DSN, configs.DBConfig().DB_DATABASE)
 	app.Middlewares(server)
 	app.Routes(server)
 	app.Serve(server, configs.AppConfig().PORT)

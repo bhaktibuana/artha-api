@@ -1,13 +1,28 @@
 package app
 
 import (
+	"artha-api/src/database"
 	"artha-api/src/routers"
+	"fmt"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func DBConnection() {
+func DBConnection(uri, dbName string) {
+	err := database.Connect(uri, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Database connected successfully ✨")
+
+	defer func() {
+		err := database.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
 }
 
 func Middlewares(app *gin.Engine) {
