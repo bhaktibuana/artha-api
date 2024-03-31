@@ -5,11 +5,11 @@ import (
 )
 
 type S_ClientConfig struct {
-	ArthaUrl string
+	ARTHA_URL string
 }
 
 func ClientConfig() S_ClientConfig {
 	return S_ClientConfig{
-		ArthaUrl: os.Getenv("ARTHA_URL"),
+		ARTHA_URL: os.Getenv("ARTHA_URL"),
 	}
 }
