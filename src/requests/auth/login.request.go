@@ -13,6 +13,11 @@ type S_LoginRequest struct {
 	Encrypted bool   `json:"encrypted"`
 }
 
+// Login Request
+/*
+ * @param context *gin.Context
+ * @returns *S_LoginRequest
+ */
 func Login(context *gin.Context) *S_LoginRequest {
 	var request S_LoginRequest
 
