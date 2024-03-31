@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Login(context *gin.Context, request *authRequest.LoginRequest) *models.Users {
+func Login(context *gin.Context, request *authRequest.S_LoginRequest) *models.Users {
 	var user models.Users
 
 	if !request.Encrypted {
