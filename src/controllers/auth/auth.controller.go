@@ -10,6 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Login Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
 func Login(context *gin.Context) {
 	request := authRequest.Login(context)
 	if request == nil {

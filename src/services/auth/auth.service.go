@@ -12,6 +12,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// Login Service
+/*
+ * @param context *gin.Context
+ * @param request *authRequest.S_LoginRequest
+ * @returns *models.Users
+ */
 func Login(context *gin.Context, request *authRequest.S_LoginRequest) *models.Users {
 	var user models.Users
 

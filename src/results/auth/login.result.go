@@ -15,6 +15,11 @@ type S_LoginResult struct {
 	Token   string             `json:"token"`
 }
 
+// Login Request
+/*
+ * @param user *models.Users
+ * @returns S_LoginResult
+ */
 func Login(user *models.Users) S_LoginResult {
 	claims := jwt.MapClaims{
 		"id":       user.ID,
