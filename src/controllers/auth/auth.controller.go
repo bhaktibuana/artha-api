@@ -1,21 +1,30 @@
 package authController
 
 import (
+	"artha-api/src/helpers"
 	authRequest "artha-api/src/requests/auth"
+	authResult "artha-api/src/results/auth"
+	authService "artha-api/src/services/auth"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+// Login Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
 func Login(context *gin.Context) {
 	request := authRequest.Login(context)
 	if request == nil {
 		return
 	}
 
-	// user := authService.Login(context, request)
-	// if user == nil {
-	// 	return
-	// }
+	user := authService.Login(context, request)
+	if user == nil {
+		return
+	}
 
-	// helpers.Response("Login success", http.StatusOK, context, authResult.Login(user))
+	helpers.HttpResponse("Login success", http.StatusOK, context, authResult.Login(user))
 }
