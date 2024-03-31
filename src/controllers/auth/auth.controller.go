@@ -48,3 +48,22 @@ func Register(context *gin.Context) {
 
 	helpers.HttpResponse(constants.REGISTER_SUCCESS, http.StatusOK, context, authResult.Register(user))
 }
+
+// Me Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func Me(context *gin.Context) {
+	id := authRequest.Me(context)
+	if id == nil {
+		return
+	}
+
+	user := authService.Me(context, *id)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Me(user))
+}
