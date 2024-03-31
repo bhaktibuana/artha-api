@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  artha-api-dev:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: artha-api-dev
+    image: artha-api-dev
+    ports:
+      - 3040:3040
+    env_file:
+      - .env.dev
+    networks:
+      - artha_api_dev_network
+
+networks:
+  artha_api_dev_network: 
+    name: artha_api_dev_network
