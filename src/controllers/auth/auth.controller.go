@@ -1,6 +1,7 @@
 package authController
 
 import (
+	"artha-api/src/constants"
 	"artha-api/src/helpers"
 	authRequest "artha-api/src/requests/auth"
 	authResult "artha-api/src/results/auth"
@@ -26,5 +27,24 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	helpers.HttpResponse("Login success", http.StatusOK, context, authResult.Login(user))
+	helpers.HttpResponse(constants.LOGIN_SUCCESS, http.StatusOK, context, authResult.Login(user))
+}
+
+// Register Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func Register(context *gin.Context) {
+	request := authRequest.Register(context)
+	if request == nil {
+		return
+	}
+
+	user := authService.Register(context, request)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REGISTER_SUCCESS, http.StatusOK, context, authResult.Register(user))
 }
