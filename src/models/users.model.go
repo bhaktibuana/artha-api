@@ -13,7 +13,7 @@ type Users struct {
 	Tag         string             `bson:"tag" json:"tag"`
 	Email       string             `bson:"email" json:"email"`
 	Password    string             `bson:"password" json:"password"`
-	Birthdate   time.Time          `bson:"birthdate" json:"birthdate"`
+	Birthdate   time.Time          `bson:"birthdate,omitempty" json:"birthdate"`
 	Gender      string             `bson:"gender" json:"gender"`
 	AccountType string             `bson:"account_type" json:"account_type"`
 	Photo       string             `bson:"photo" json:"photo"`

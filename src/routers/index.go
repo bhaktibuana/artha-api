@@ -36,7 +36,7 @@ func Index(router *gin.Engine) {
 	router.NoRoute(func(context *gin.Context) {
 		baseUrl, _ := context.Get("baseUrl")
 		url := fmt.Sprintf("%s%s", baseUrl, context.Request.URL.Path)
-		helpers.HttpResponse("URL not found", http.StatusNotFound, context, map[string]interface{}{"url": url})
+		helpers.HttpResponse("URL not found.", http.StatusNotFound, context, map[string]interface{}{"url": url})
 	})
 
 	router.GET("/", func(context *gin.Context) {

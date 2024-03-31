@@ -22,7 +22,7 @@ func Login(context *gin.Context) *S_LoginRequest {
 	var request S_LoginRequest
 
 	if err := context.ShouldBindJSON(&request); err != nil {
-		helpers.HttpResponse(err.Error(), http.StatusBadRequest, context, nil)
+		helpers.HttpResponse(err.Error(), http.StatusUnprocessableEntity, context, nil)
 		return nil
 	}
 
