@@ -2,6 +2,7 @@ package routers
 
 import (
 	authController "artha-api/src/controllers/auth"
+	"artha-api/src/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,6 @@ func Auth(router *gin.RouterGroup) {
 	{
 		authGroup.POST("/login", authController.Login)
 		authGroup.POST("/register", authController.Register)
-		authGroup.GET("/:id", authController.Me)
+		authGroup.GET("/:id", middlewares.IsAuthenticate, authController.Me)
 	}
 }
