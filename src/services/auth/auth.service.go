@@ -115,3 +115,28 @@ func Register(context *gin.Context, request *authRequest.S_RegisterRequest) *mod
 
 	return &user
 }
+
+// Me Service
+/*
+ * @param context *gin.Context
+ * @param id string
+ * @returns *models.Users
+ */
+func Me(context *gin.Context, id primitive.ObjectID) *models.Users {
+	var user models.Users
+
+	filter := bson.M{"_id": id}
+
+	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			helpers.HttpResponse(constants.DATA_NOT_FOUND, http.StatusNotFound, context, nil)
+			return nil
+		default:
+			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
+			return nil
+		}
+	}
+
+	return &user
+}
