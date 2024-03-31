@@ -13,5 +13,8 @@ type LoginResult struct {
 }
 
 func Login(user *models.Users) LoginResult {
-	return LoginResult{}
+	return LoginResult{
+		ID:      user.ID,
+		ArthaId: user.Username + "#" + user.Tag,
+	}
 }
