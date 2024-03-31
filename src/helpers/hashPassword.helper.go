@@ -6,11 +6,6 @@ import (
 	"encoding/hex"
 )
 
-// HashPassword Helper
-/*
- * @param password string
- * @returns string
- */
 func HashPassword(password string) string {
 	salt := "p@5s.@rth4"
 

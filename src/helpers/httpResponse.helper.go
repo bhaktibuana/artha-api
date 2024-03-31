@@ -8,14 +8,6 @@ type S_HttpResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-// HttpResponse Helper
-/*
- * @param message string
- * @param httpStatus int
- * @param context *gin.Context
- * @param data interface{}
- * @returns
- */
 func HttpResponse(message string, httpStatus int, context *gin.Context, data interface{}) {
 	response := S_HttpResponse{
 		Message: message,
@@ -23,7 +15,7 @@ func HttpResponse(message string, httpStatus int, context *gin.Context, data int
 		Data:    data,
 	}
 
-	if response.Status {
+	if response.Status == true {
 		context.JSON(httpStatus, response)
 	} else {
 		context.AbortWithStatusJSON(httpStatus, response)

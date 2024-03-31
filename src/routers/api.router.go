@@ -5,9 +5,9 @@ import (
 )
 
 func ApiRouter(router *gin.Engine) {
-	basePath := "/api"
-	apiGroup := router.Group(basePath)
-	{
-		Auth(apiGroup)
-	}
+	// basePath := "/api"
+	// apiGroup := router.Group(basePath)
+	// {
+
+	// }
 }
