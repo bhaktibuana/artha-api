@@ -33,3 +33,16 @@ func TestGenerateJWT(t *testing.T) {
 	assert.True(t, parsedToken.Valid, "JWT token should be valid")
 	assert.Equal(t, payload["sub"], claims["sub"], "JWT token subject should match")
 }
+
+func TestHashPassword(t *testing.T) {
+	// Test case: Hashing succeeds
+	t.Run("HashingSucceeds", func(t *testing.T) {
+		password := "secretpassword"
+		hashedPassword := helpers.HashPassword(password)
+
+		// You might want to adjust this expectation based on the actual hashed value
+		expectedHash := "0d3418706dcc4c2bf745542eb58a34f2bb8e4ae6bdd24d195dda646108551474"
+
+		assert.Equal(t, expectedHash, hashedPassword, "Hashed password should match expected value")
+	})
+}
