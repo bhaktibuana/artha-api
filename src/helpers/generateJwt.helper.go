@@ -7,6 +7,12 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+// GenerateJWT Helper
+/*
+ * @param payload jwt.Claims
+ * @param expiresIn time.Duration
+ * @returns (string, error)
+ */
 func GenerateJWT(payload jwt.Claims, expiresIn time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	if expiresIn > 0 {
