@@ -12,6 +12,9 @@ import (
 func Index(router *gin.Engine) {
 	router.Use(func(context *gin.Context) {
 		scheme := context.Request.Header.Get("X-Forwarded-Proto")
+		language := context.Request.Header.Get("Language")
+
+		context.Set("language", language)
 
 		if scheme == "" {
 			scheme = "http"
