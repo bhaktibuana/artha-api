@@ -3,6 +3,7 @@ package helpers_test
 import (
 	"artha-api/src/configs"
 	"artha-api/src/helpers"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -65,5 +66,30 @@ func TestGenerateAccountId(t *testing.T) {
 	parts := strings.Split(randomAccountId, "#")
 	if len(parts) != 2 {
 		t.Errorf("Random account ID is not in the correct format: %s", randomAccountId)
+	}
+}
+
+func TestVerifyJwt(t *testing.T) {
+	os.Setenv("JWT_SECRET_KEY", "test-secret-key")
+
+	payload := jwt.MapClaims{
+		"sub": "user123",
+		"exp": time.Now().Add(1 * time.Hour).Unix(),
+	}
+
+	validToken, err := helpers.GenerateJWT(payload, 1*time.Hour)
+	assert.NoError(t, err, "GenerateJWT should not return an error")
+
+	_, err = helpers.VerifyJwt(validToken)
+	if err != nil {
+		t.Errorf("VerifyJwt(%q) returned error: %v", validToken, err)
+	}
+
+	invalidToken := "invalid-jwt-token-string"
+
+	_, err = helpers.VerifyJwt(invalidToken)
+
+	if err == nil {
+		t.Errorf("VerifyJwt(%q) did not return error for invalid token", invalidToken)
 	}
 }
