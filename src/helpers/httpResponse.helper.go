@@ -15,7 +15,7 @@ func HttpResponse(message string, httpStatus int, context *gin.Context, data int
 		Data:    data,
 	}
 
-	if response.Status == true {
+	if response.Status {
 		context.JSON(httpStatus, response)
 	} else {
 		context.AbortWithStatusJSON(httpStatus, response)
