@@ -16,13 +16,6 @@ func DBConnection(uri, dbName string) {
 		return
 	}
 	fmt.Println("Database connected successfully ✨")
-
-	defer func() {
-		err := database.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
-	}()
 }
 
 func Middlewares(app *gin.Engine) {

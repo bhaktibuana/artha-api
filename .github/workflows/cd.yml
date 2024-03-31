@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Deployment
+      - name: Dev Deployment
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'pull_request' && github.base_ref == 'dev') }}
         uses: appleboy/ssh-action@master
         with:
