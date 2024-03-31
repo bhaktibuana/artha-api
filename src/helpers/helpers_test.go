@@ -3,6 +3,7 @@ package helpers_test
 import (
 	"artha-api/src/configs"
 	"artha-api/src/helpers"
+	"strings"
 	"testing"
 	"time"
 
@@ -45,4 +46,24 @@ func TestHashPassword(t *testing.T) {
 
 		assert.Equal(t, expectedHash, hashedPassword, "Hashed password should match expected value")
 	})
+}
+
+func TestGenerateAccountId(t *testing.T) {
+	randomUsername, randomTag, randomAccountId := helpers.GenerateAccountId()
+
+	// Check if randomUsername is not empty
+	if randomUsername == "" {
+		t.Errorf("Random username is empty")
+	}
+
+	// Check if randomTag is not empty
+	if randomTag == "" {
+		t.Errorf("Random tag is empty")
+	}
+
+	// Check if randomAccountId is in the correct format
+	parts := strings.Split(randomAccountId, "#")
+	if len(parts) != 2 {
+		t.Errorf("Random account ID is not in the correct format: %s", randomAccountId)
+	}
 }
