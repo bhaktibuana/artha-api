@@ -10,9 +10,10 @@ import (
 )
 
 type S_LoginResult struct {
-	ID      primitive.ObjectID `json:"id"`
-	ArthaId string             `json:"artha_id"`
-	Token   string             `json:"token"`
+	ID         primitive.ObjectID `json:"id"`
+	ArthaId    string             `json:"artha_id"`
+	Require2FA bool               `json:"require_2fa"`
+	Token      string             `json:"token"`
 }
 
 // Login Request
@@ -21,6 +22,14 @@ type S_LoginResult struct {
  * @returns S_LoginResult
  */
 func Login(user *models.Users) S_LoginResult {
+	if user.Secret2FA != "" {
+		return S_LoginResult{
+			ID:         user.ID,
+			ArthaId:    user.Username + "#" + user.Tag,
+			Require2FA: true,
+		}
+	}
+
 	claims := jwt.MapClaims{
 		"id":       user.ID,
 		"email":    user.Email,
@@ -32,8 +41,9 @@ func Login(user *models.Users) S_LoginResult {
 	token, _ := helpers.GenerateJWT(claims, time.Hour*24*30)
 
 	return S_LoginResult{
-		ID:      user.ID,
-		ArthaId: user.Username + "#" + user.Tag,
-		Token:   token,
+		ID:         user.ID,
+		ArthaId:    user.Username + "#" + user.Tag,
+		Require2FA: false,
+		Token:      token,
 	}
 }

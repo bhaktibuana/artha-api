@@ -13,6 +13,8 @@ const (
 	REGISTER_FAILED       string = "register_failed"
 	REQUEST_SUCCESS       string = "request_success"
 	DATA_NOT_FOUND        string = "data_not_found"
+	INVALID_USER          string = "invalid_user"
+	INVALID_OTP           string = "invalid_otp"
 )
 
 var Languages = LanguageMap{
@@ -27,6 +29,8 @@ var Languages = LanguageMap{
 		REGISTER_FAILED:       "Register failed.",
 		REQUEST_SUCCESS:       "Request successful.",
 		DATA_NOT_FOUND:        "Data not found.",
+		INVALID_USER:          "Invalid User.",
+		INVALID_OTP:           "Invalid OTP.",
 	},
 	"id": {
 		INTERNAL_SERVER_ERROR: "Terjadi kesalahan sistem.",
@@ -39,5 +43,7 @@ var Languages = LanguageMap{
 		REGISTER_FAILED:       "Gagal mendaftar.",
 		REQUEST_SUCCESS:       "Permintaan berhasil.",
 		DATA_NOT_FOUND:        "Data tidak ditemukan.",
+		INVALID_USER:          "Pengguna tidak valid.",
+		INVALID_OTP:           "OTP tidak valid.",
 	},
 }
