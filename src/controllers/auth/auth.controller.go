@@ -55,12 +55,7 @@ func Register(context *gin.Context) {
  * @returns
  */
 func Me(context *gin.Context) {
-	id := authRequest.Me(context)
-	if id == nil {
-		return
-	}
-
-	user := authService.Me(context, *id)
+	user := authService.Me(context)
 	if user == nil {
 		return
 	}
