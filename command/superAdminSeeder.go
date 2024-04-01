@@ -31,9 +31,9 @@ func main() {
 		Email:       "admin@artha.bhaktibuana.com",
 		Password:    helpers.HashPassword(os.Getenv("SUPER_ADMIN_PASSWORD")),
 		Birthdate:   time.Date(1998, 12, 9, 0, 0, 0, 0, time.UTC),
-		Gender:      "Male",
-		AccountType: "super_admin",
-		Status:      "verified",
+		Gender:      models.USER_GENDER_MALE,
+		AccountType: models.USER_ACCOUNT_TYPE_ADMIN,
+		Status:      models.USER_STATUS_VERIFIED,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
