@@ -10,6 +10,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/xlzd/gotp"
 )
 
 func TestGenerateJWT(t *testing.T) {
@@ -91,5 +92,35 @@ func TestVerifyJwt(t *testing.T) {
 
 	if err == nil {
 		t.Errorf("VerifyJwt(%q) did not return error for invalid token", invalidToken)
+	}
+}
+
+func TestGenerateTOTPWithSecret(t *testing.T) {
+	id := "exampleID"
+
+	// Call the function
+	secret, uri := helpers.GenerateTOTPWithSecret(id)
+
+	// Perform assertions
+	if secret == "" {
+		t.Error("Generated secret should not be empty")
+	}
+
+	if uri == "" {
+		t.Error("Provisioning URI should not be empty")
+	}
+}
+
+func TestVerifyOTP(t *testing.T) {
+	secretKey := gotp.RandomSecret(16)
+	totp := gotp.NewDefaultTOTP(secretKey)
+	otp := totp.Now()
+
+	// Verify the OTP
+	result := helpers.VerifyOTP(otp, secretKey)
+
+	// Perform assertion
+	if !result {
+		t.Error("OTP verification failed")
 	}
 }

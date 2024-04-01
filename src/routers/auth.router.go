@@ -15,4 +15,6 @@ func Auth(router *gin.RouterGroup) {
 	publicRoute.POST("/login", authController.Login)
 	publicRoute.POST("/register", authController.Register)
 	privateRoute.GET("/me", authController.Me)
+	publicRoute.POST("/:id/login-verify-2fa", authController.LoginVerify2FA)
+	privateRoute.POST("/verify-2fa", authController.Verify2FA)
 }

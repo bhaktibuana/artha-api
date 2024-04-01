@@ -62,3 +62,41 @@ func Me(context *gin.Context) {
 
 	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Me(user))
 }
+
+// LoginVerify2FA Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func LoginVerify2FA(context *gin.Context) {
+	id, request := authRequest.LoginVerify2FA(context)
+	if request == nil {
+		return
+	}
+
+	user := authService.LoginVerify2FA(context, *id, request)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Verify2FA(user))
+}
+
+// Verify2FA Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func Verify2FA(context *gin.Context) {
+	request := authRequest.Verify2FA(context)
+	if request == nil {
+		return
+	}
+
+	user := authService.Verify2FA(context, request)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Verify2FA(user))
+}

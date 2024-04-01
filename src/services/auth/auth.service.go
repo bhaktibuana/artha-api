@@ -44,6 +44,11 @@ func Login(context *gin.Context, request *authRequest.S_LoginRequest) *models.Us
 		}
 	}
 
+	if !user.DeletedAt.IsZero() {
+		helpers.HttpResponse(constants.WRONG_MAIL_PASS, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
 	if user.Status == models.USER_STATUS_UNVERIFIED {
 		helpers.HttpResponse(constants.UNVERIFIED_MAIL, http.StatusBadRequest, context, nil)
 		return nil
@@ -126,12 +131,11 @@ func Me(context *gin.Context) *models.Users {
 
 	id, err := helpers.GetSelfID(context)
 	if err != nil {
-		helpers.HttpResponse(constants.DATA_NOT_FOUND, http.StatusNotFound, context, nil)
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusNotFound, context, nil)
 		return nil
 	}
 
 	_id, _ := primitive.ObjectIDFromHex(id)
-
 	filter := bson.M{"_id": _id}
 
 	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
@@ -151,4 +155,67 @@ func Me(context *gin.Context) *models.Users {
 	}
 
 	return &user
+}
+
+// verify2FAOTP Service
+/*
+ * @param context *gin.Context
+ * @param id string
+ * @param otp string
+ * @returns *models.Users
+ */
+func verify2FAOTP(context *gin.Context, id, otp string) *models.Users {
+	var user models.Users
+
+	_id, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": _id}
+
+	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			helpers.HttpResponse(constants.DATA_NOT_FOUND, http.StatusNotFound, context, nil)
+			return nil
+		default:
+			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
+			return nil
+		}
+	}
+
+	if !helpers.VerifyOTP(otp, user.Secret2FA) {
+		helpers.HttpResponse(constants.INVALID_OTP, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	return &user
+}
+
+// LoginVerify2FA Service
+/*
+ * @param context *gin.Context
+ * @param id string
+ * @param request *authRequest.S_LoginVerify2FA
+ * @returns *models.Users
+ */
+func LoginVerify2FA(context *gin.Context, id string, request *authRequest.S_LoginVerify2FA) *models.Users {
+	user := verify2FAOTP(context, id, request.OTP)
+
+	return user
+}
+
+// Verify2FA Service
+/*
+ * @param context *gin.Context
+ * @param request *authRequest.S_Verify2FA
+ * @returns *models.Users
+ */
+func Verify2FA(context *gin.Context, request *authRequest.S_Verify2FA) *models.Users {
+	id, err := helpers.GetSelfID(context)
+	if err != nil {
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusNotFound, context, nil)
+		return nil
+	}
+
+	user := verify2FAOTP(context, id, request.OTP)
+
+	return user
 }
