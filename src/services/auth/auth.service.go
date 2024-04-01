@@ -44,7 +44,7 @@ func Login(context *gin.Context, request *authRequest.S_LoginRequest) *models.Us
 		}
 	}
 
-	if user.Status == "unverified" {
+	if user.Status == models.USER_STATUS_UNVERIFIED {
 		helpers.HttpResponse(constants.UNVERIFIED_MAIL, http.StatusBadRequest, context, nil)
 		return nil
 	}
@@ -85,8 +85,8 @@ func Register(context *gin.Context, request *authRequest.S_RegisterRequest) *mod
 		Tag:         tag,
 		Email:       request.Email,
 		Password:    request.Password,
-		AccountType: "user",
-		Status:      "unverified",
+		AccountType: models.USER_ACCOUNT_TYPE_USER,
+		Status:      models.USER_STATUS_UNVERIFIED,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
@@ -119,13 +119,20 @@ func Register(context *gin.Context, request *authRequest.S_RegisterRequest) *mod
 // Me Service
 /*
  * @param context *gin.Context
- * @param id string
  * @returns *models.Users
  */
-func Me(context *gin.Context, id primitive.ObjectID) *models.Users {
+func Me(context *gin.Context) *models.Users {
 	var user models.Users
 
-	filter := bson.M{"_id": id}
+	id, err := helpers.GetSelfID(context)
+	if err != nil {
+		helpers.HttpResponse(constants.DATA_NOT_FOUND, http.StatusNotFound, context, nil)
+		return nil
+	}
+
+	_id, _ := primitive.ObjectIDFromHex(id)
+
+	filter := bson.M{"_id": _id}
 
 	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
 		switch err {
@@ -136,6 +143,11 @@ func Me(context *gin.Context, id primitive.ObjectID) *models.Users {
 			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
 			return nil
 		}
+	}
+
+	if user.Status == models.USER_STATUS_UNVERIFIED {
+		helpers.HttpResponse(constants.UNVERIFIED_MAIL, http.StatusBadRequest, context, nil)
+		return nil
 	}
 
 	return &user

@@ -22,3 +22,12 @@ type Users struct {
 	UpdatedAt   time.Time          `bson:"updated_at" json:"updated_at"`
 	DeletedAt   time.Time          `bson:"deleted_at,omitempty" json:"deleted_at"`
 }
+
+const (
+	USER_GENDER_MALE        string = "male"
+	USER_GENDER_FEMALE      string = "female"
+	USER_ACCOUNT_TYPE_ADMIN string = "super_admin"
+	USER_ACCOUNT_TYPE_USER  string = "user"
+	USER_STATUS_VERIFIED    string = "verified"
+	USER_STATUS_UNVERIFIED  string = "unverified"
+)
