@@ -15,6 +15,8 @@ const (
 	DATA_NOT_FOUND        string = "data_not_found"
 	INVALID_USER          string = "invalid_user"
 	INVALID_OTP           string = "invalid_otp"
+	SET_2FA_FAILED        string = "set_2fa_failed"
+	WRONG_PASS            string = "wrong_pass"
 )
 
 var Languages = LanguageMap{
@@ -31,6 +33,8 @@ var Languages = LanguageMap{
 		DATA_NOT_FOUND:        "Data not found.",
 		INVALID_USER:          "Invalid User.",
 		INVALID_OTP:           "Invalid OTP.",
+		SET_2FA_FAILED:        "Set Two Factor Authentication failed.",
+		WRONG_PASS:            "Incorrect password.",
 	},
 	"id": {
 		INTERNAL_SERVER_ERROR: "Terjadi kesalahan sistem.",
@@ -45,5 +49,7 @@ var Languages = LanguageMap{
 		DATA_NOT_FOUND:        "Data tidak ditemukan.",
 		INVALID_USER:          "Pengguna tidak valid.",
 		INVALID_OTP:           "OTP tidak valid.",
+		SET_2FA_FAILED:        "Gagal Mengatur Otentikasi Dua Faktor.",
+		WRONG_PASS:            "Kata sandi salah.",
 	},
 }
