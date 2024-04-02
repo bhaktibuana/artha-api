@@ -12,6 +12,9 @@ import (
 func Index(router *gin.Engine) {
 	router.Use(func(context *gin.Context) {
 		scheme := context.Request.Header.Get("X-Forwarded-Proto")
+		language := context.Request.Header.Get("Language")
+
+		context.Set("language", language)
 
 		if scheme == "" {
 			scheme = "http"
@@ -33,7 +36,7 @@ func Index(router *gin.Engine) {
 	router.NoRoute(func(context *gin.Context) {
 		baseUrl, _ := context.Get("baseUrl")
 		url := fmt.Sprintf("%s%s", baseUrl, context.Request.URL.Path)
-		helpers.HttpResponse("URL not found", http.StatusNotFound, context, map[string]interface{}{"url": url})
+		helpers.HttpResponse("URL not found.", http.StatusNotFound, context, map[string]interface{}{"url": url})
 	})
 
 	router.GET("/", func(context *gin.Context) {
