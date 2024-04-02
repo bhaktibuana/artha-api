@@ -14,7 +14,7 @@ type S_LoginVerify2FA struct {
 // LoginVerify2FA Request
 /*
  * @param context *gin.Context
- * @returns *S_LoginVerify2FA
+ * @returns (*string, *S_LoginVerify2FA) (id, requestBody)
  */
 func LoginVerify2FA(context *gin.Context) (*string, *S_LoginVerify2FA) {
 	var request S_LoginVerify2FA

@@ -19,4 +19,5 @@ func Auth(router *gin.RouterGroup) {
 	privateRoute.POST("/verify-2fa", authController.Verify2FA)
 	privateRoute.GET("/get-new-2fa-uri", authController.GetNew2FAUri)
 	privateRoute.PUT("/update-2fa-secret", authController.Update2FASecret)
+	publicRoute.POST("/verify-email", authController.VerifyEmail)
 }

@@ -308,6 +308,61 @@ func Update2FASecret(context *gin.Context, request *authRequest.S_Update2FASecre
 
 	if _, err := database.Users.UpdateOne(context, filter, updatePayload); err != nil {
 		helpers.HttpResponse(constants.SET_2FA_FAILED, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	return &user
+}
+
+// VerifyEmail Service
+/*
+ * @param context *gin.Context
+ * @param request *authRequest.S_VerifyEmail
+ * @returns *models.Users
+ */
+func VerifyEmail(context *gin.Context, request *authRequest.S_VerifyEmail) *models.Users {
+	var user models.Users
+
+	claims, err := helpers.VerifyJwt(request.Token)
+	if err != nil {
+		helpers.HttpResponse(constants.INVALID_TOKEN, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	id, ok := claims["id"].(string)
+	if !ok {
+		helpers.HttpResponse(constants.INVALID_TOKEN, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	_id, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": _id}
+
+	if err = database.Users.FindOne(context, filter).Decode(&user); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			helpers.HttpResponse(constants.INVALID_USER, http.StatusNotFound, context, nil)
+			return nil
+		default:
+			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
+			return nil
+		}
+	}
+
+	if user.Status == models.USER_STATUS_VERIFIED {
+		helpers.HttpResponse(constants.MAIL_ALREADY_VERIFIED, http.StatusBadRequest, context, filter)
+		return nil
+	}
+
+	updatePayload := bson.M{
+		"$set": bson.M{
+			"status": models.USER_STATUS_VERIFIED,
+		},
+	}
+
+	if _, err = database.Users.UpdateOne(context, filter, updatePayload); err != nil {
+		helpers.HttpResponse(constants.VERIFY_MAIL_FAILED, http.StatusBadRequest, context, nil)
+		return nil
 	}
 
 	return &user

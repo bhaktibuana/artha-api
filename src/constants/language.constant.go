@@ -17,6 +17,9 @@ const (
 	INVALID_OTP           string = "invalid_otp"
 	SET_2FA_FAILED        string = "set_2fa_failed"
 	WRONG_PASS            string = "wrong_pass"
+	INVALID_TOKEN         string = "invalid_token"
+	MAIL_ALREADY_VERIFIED string = "mail_already_verified"
+	VERIFY_MAIL_FAILED    string = "verify_mail_failed"
 )
 
 var Languages = LanguageMap{
@@ -31,10 +34,13 @@ var Languages = LanguageMap{
 		REGISTER_FAILED:       "Register failed.",
 		REQUEST_SUCCESS:       "Request successful.",
 		DATA_NOT_FOUND:        "Data not found.",
-		INVALID_USER:          "Invalid User.",
+		INVALID_USER:          "Invalid user.",
 		INVALID_OTP:           "Invalid OTP.",
 		SET_2FA_FAILED:        "Set Two Factor Authentication failed.",
 		WRONG_PASS:            "Incorrect password.",
+		INVALID_TOKEN:         "Invalid token.",
+		MAIL_ALREADY_VERIFIED: "Email already verified.",
+		VERIFY_MAIL_FAILED:    "Failed to verify email.",
 	},
 	"id": {
 		INTERNAL_SERVER_ERROR: "Terjadi kesalahan sistem.",
@@ -51,5 +57,8 @@ var Languages = LanguageMap{
 		INVALID_OTP:           "OTP tidak valid.",
 		SET_2FA_FAILED:        "Gagal Mengatur Otentikasi Dua Faktor.",
 		WRONG_PASS:            "Kata sandi salah.",
+		INVALID_TOKEN:         "Token tidak valid.",
+		MAIL_ALREADY_VERIFIED: "Email sudah terverifikasi.",
+		VERIFY_MAIL_FAILED:    "Verifikasi email gagal.",
 	},
 }
