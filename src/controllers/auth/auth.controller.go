@@ -133,3 +133,22 @@ func Update2FASecret(context *gin.Context) {
 
 	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Update2FASecret(user))
 }
+
+// VerifyEmail Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func VerifyEmail(context *gin.Context) {
+	request := authRequest.VerifyEmail(context)
+	if request == nil {
+		return
+	}
+
+	user := authService.VerifyEmail(context, request)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.VerifyEmail(user))
+}
