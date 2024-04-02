@@ -100,3 +100,36 @@ func Verify2FA(context *gin.Context) {
 
 	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Verify2FA(user))
 }
+
+// GetNew2FAUri Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func GetNew2FAUri(context *gin.Context) {
+	payload := authService.GetNew2FAUri(context)
+	if payload == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.GetNew2FAUri(payload))
+}
+
+// Update2FASecret Controller
+/*
+ * @param context *gin.Context
+ * @returns
+ */
+func Update2FASecret(context *gin.Context) {
+	request := authRequest.Update2FASecret(context)
+	if request == nil {
+		return
+	}
+
+	user := authService.Update2FASecret(context, request)
+	if user == nil {
+		return
+	}
+
+	helpers.HttpResponse(constants.REQUEST_SUCCESS, http.StatusOK, context, authResult.Update2FASecret(user))
+}
