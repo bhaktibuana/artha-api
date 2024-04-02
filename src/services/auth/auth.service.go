@@ -131,7 +131,7 @@ func Me(context *gin.Context) *models.Users {
 
 	id, err := helpers.GetSelfID(context)
 	if err != nil {
-		helpers.HttpResponse(constants.INVALID_USER, http.StatusNotFound, context, nil)
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusBadRequest, context, nil)
 		return nil
 	}
 
@@ -211,11 +211,104 @@ func LoginVerify2FA(context *gin.Context, id string, request *authRequest.S_Logi
 func Verify2FA(context *gin.Context, request *authRequest.S_Verify2FA) *models.Users {
 	id, err := helpers.GetSelfID(context)
 	if err != nil {
-		helpers.HttpResponse(constants.INVALID_USER, http.StatusNotFound, context, nil)
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusBadRequest, context, nil)
 		return nil
 	}
 
 	user := verify2FAOTP(context, id, request.OTP)
 
 	return user
+}
+
+type S_GetNew2FAUri struct {
+	SecretKey string
+	URI       string
+}
+
+// GetNew2FAUri Service
+/*
+ * @param context *gin.Context
+ * @returns *models.Users
+ */
+func GetNew2FAUri(context *gin.Context) *S_GetNew2FAUri {
+	var user models.Users
+
+	id, err := helpers.GetSelfID(context)
+	if err != nil {
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusBadRequest, context, nil)
+		return nil
+	}
+	_id, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": _id}
+
+	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			helpers.HttpResponse(constants.DATA_NOT_FOUND, http.StatusNotFound, context, nil)
+			return nil
+		default:
+			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
+			return nil
+		}
+	}
+
+	if user.Status == models.USER_STATUS_UNVERIFIED {
+		helpers.HttpResponse(constants.UNVERIFIED_MAIL, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	secretKey, uri := helpers.GenerateTOTPWithSecret(user.Email)
+
+	return &S_GetNew2FAUri{SecretKey: secretKey, URI: uri}
+}
+
+// Update2FASecret Service
+/*
+ * @param context *gin.Context
+ * @param request *authRequest.S_Update2FASecret
+ * @returns *models.Users
+ */
+func Update2FASecret(context *gin.Context, request *authRequest.S_Update2FASecret) *models.Users {
+	var user models.Users
+
+	id, err := helpers.GetSelfID(context)
+	if err != nil {
+		helpers.HttpResponse(constants.INVALID_USER, http.StatusBadRequest, context, nil)
+		return nil
+	}
+	_id, _ := primitive.ObjectIDFromHex(id)
+
+	if !request.Encrypted {
+		request.Password = helpers.HashPassword(request.Password)
+	}
+
+	filter := bson.M{"_id": _id, "password": request.Password}
+
+	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			helpers.HttpResponse(constants.WRONG_PASS, http.StatusBadRequest, context, nil)
+			return nil
+		default:
+			helpers.HttpResponse(constants.INTERNAL_SERVER_ERROR, http.StatusInternalServerError, context, nil)
+			return nil
+		}
+	}
+
+	if !helpers.VerifyOTP(request.OTP, request.SecretKey) {
+		helpers.HttpResponse(constants.INVALID_OTP, http.StatusBadRequest, context, nil)
+		return nil
+	}
+
+	updatePayload := bson.M{
+		"$set": bson.M{
+			"secret_2fa": request.SecretKey,
+		},
+	}
+
+	if _, err := database.Users.UpdateOne(context, filter, updatePayload); err != nil {
+		helpers.HttpResponse(constants.SET_2FA_FAILED, http.StatusBadRequest, context, nil)
+	}
+
+	return &user
 }
