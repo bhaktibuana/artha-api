@@ -9,6 +9,7 @@ import (
 	"artha-api/src/models"
 	authRequest "artha-api/src/requests/auth"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -31,7 +32,9 @@ func Login(context *gin.Context, request *authRequest.S_LoginRequest) *models.Us
 		request.Password = helpers.HashPassword(request.Password)
 	}
 
-	filter := bson.M{"email": request.Email, "password": request.Password}
+	normalizedEmail := strings.ToLower(request.Email)
+
+	filter := bson.M{"email": normalizedEmail, "password": request.Password}
 
 	if err := database.Users.FindOne(context, filter).Decode(&user); err != nil {
 		switch err {
@@ -83,12 +86,14 @@ func Register(context *gin.Context, request *authRequest.S_RegisterRequest) *mod
 		}
 	}
 
+	normalizedEmail := strings.ToLower(request.Email)
+
 	user = models.Users{
 		ID:          primitive.NewObjectID(),
 		Name:        request.Name,
 		Username:    username,
 		Tag:         tag,
-		Email:       request.Email,
+		Email:       normalizedEmail,
 		Password:    request.Password,
 		AccountType: models.USER_ACCOUNT_TYPE_USER,
 		Status:      models.USER_STATUS_UNVERIFIED,
